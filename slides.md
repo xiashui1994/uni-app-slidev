@@ -1064,7 +1064,7 @@ function () { }
 
 > 以此反复直到清空所以宏任务，这种不断重复的执行机制，就叫做事件循环
 
-<img style="position: absolute; right: 40px; top: 150px; width: 500px" src="/loop.awebp">
+<img style="position: absolute; right: 40px; top: 150px; width: 500px" src="/loop.png">
 
 ---
 
@@ -1292,6 +1292,142 @@ x();
 > JavaScript 对象通过 **\_\_proto\_\_** 指向父类对象，直到指向 Object 对象为止，这样就形成了一个原型指向的链条，即原型链
 
 <img style="margin-left: -80px" src="/proto.png" />
+
+---
+
+# JavaScript
+
+#### DOM
+
+<br />
+
+> DOM(Document Object Model) 是一套用于操作页面元素的 API，可以把 HTML 看做是文档树，通过 DOM 提供的 API 可以对树上的节点进行操作
+
+<br />
+
+#### DOM节点类型
+
+- Document 节点，整个文档是一个文档节点
+- Element 节点，每个 HTML 标签是一个元素节点
+- Attribute 节点，每一个 HTML 属性是一个属性节点
+- Text 节点，包含在 HTML 元素中的文本是文本节点
+
+---
+
+# JavaScript
+
+#### 操作DOM
+
+- 查找
+
+```js
+querySelector() // 通过选择器
+querySelectorAll() // 通过选择器
+getElementsByTagName() // 通过标签名称
+getElementsByName() // 通过元素的 Name 属性的值
+getElementsByClassName() // 通过类名
+getElementById() // 通过元素 Id，唯一性
+```
+
+- 创建新节点
+
+```js
+createDocumentFragment() // 创建一个DOM片段
+createElement() // 创建一个具体的元素
+createTextNode() // 创建一个文本节点
+```
+
+- 添加、移除、替换、插入
+
+```js
+appendChild() // 添加子节点
+removeChild() // 移除子节点
+replaceChild() // 替换子节点
+insertBefore() // 插入子节点
+```
+
+---
+
+# JavaScript
+
+#### 事件
+
+<br />
+
+> 事件三要素：事件源，事件名称，事件处理函数
+
+<br />
+
+| 要素 | 说明 |
+| --- | --- |
+| 事件源 | 触发(被)事件的元素 |
+| 事件名称 | 事件的名称 |
+| 事件处理函数 | 事件触发后要执行的代码(函数形式) |
+
+---
+
+# JavaScript
+
+#### 注册/移除事件
+
+```js
+const box = document.querySelector('.box');
+
+// 1.onclick
+box.onclick = function () { }; // 注册
+box.onclick = null; // 移除
+
+// 2.addEventListener/removeEventListener
+const fn = function () { };
+box.addEventListener('click', fn, false); // 注册
+box.removeEventListener('click', fn, false); // 移除
+```
+
+<br />
+
+> 事件的三个阶段：捕获阶段、当前目标阶段、冒泡阶段
+
+<br />
+
+<div class="flex">
+ <img style="width: 150px; margin-right: 30px" src="click.png" />
+ <img style="width: 150px" src="bubbling.png" />
+</div>
+
+---
+
+# JavaScript
+
+#### 事件对象 Event
+
+| event | 说明 |
+| --- | --- |
+| type | 事件类型 |
+| target | 事件源 |
+| clientX/clientY | 窗口位置 |
+| preventDefault() | 阻止默认行为 |
+| stopPropagation() | 阻止冒泡 |
+
+---
+
+# JavaScript
+
+#### BOM
+
+<br />
+
+> 一套操作浏览器功能的 API，通过 BOM 可以操作浏览器窗口。BOM 的顶级对象是 window
+
+<br />
+
+| BOM | 说明 |
+| --- | --- |
+| 对话框 | alert()、prompt()、confirm() |
+| 定时器 | setTimeout()、clearTimeout()、setInterval()、clearInterval() |
+| location对象 | reload()、href、search |
+| history对象 | back()、forward()、go() |
+| navigator对象 | userAgent、platform |
+
 
 ---
 
