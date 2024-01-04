@@ -1390,8 +1390,8 @@ box.removeEventListener('click', fn, false); // 移除
 <br />
 
 <div class="flex">
- <img style="width: 150px; margin-right: 30px" src="click.png" />
- <img style="width: 150px" src="bubbling.png" />
+ <img style="width: 150px; margin-right: 30px" src="/click.png" />
+ <img style="width: 150px" src="/bubbling.png" />
 </div>
 
 ---
