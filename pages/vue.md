@@ -261,3 +261,378 @@ export default {
 }
 ```
 
+---
+layout: two-cols
+---
+
+# Vue
+
+#### 组件通信
+
+<br />
+
+> props/$emit
+
+<br />
+
+- 父组件通过 props 向子组件传递数据
+- 子组件通过 $emit 向父组件发送事件
+
+<br />
+
+```js
+// 子组件代码
+props: ['messageFromParent'],  // 通过 props 接收父组件传过来的消息
+data() {
+  return {
+    message: ''
+  }
+},
+methods: {
+  send() {
+    this.$emit('on-receive', this.message)  // 通过 $emit 触发 on-receive 事件，调用父组件中 receive 回调，并将 this.message 作为参数
+  }
+}
+```
+
+:: right ::
+
+```js
+// 父组件代码
+<Child :messageFromParent="message" @on-receive="receive" />
+...
+data() {
+  return {
+    message: '', // 传递给子组件的消息
+    messageFromChild: ''
+  }
+},
+methods: {
+  receive(msg) { // 接受子组件的信息，并将其赋值给 messageFromChild
+    this.messageFromChild = msg
+  }
+}
+...
+```
+
+---
+layout: two-cols
+---
+
+> v-slot
+
+<br />
+
+- 父组件通过 \<template v-slot:child\>{{ message }}\</template\> 将父组件的 message 值传递给子组件
+- 子组件通过 \<slot name="child"></slot\> 接收到相应内容
+
+```js
+// 子组件代码
+<template>
+  <div class="child">
+    <p>收到来自父组件的消息：
+      <slot name="child"></slot>  <!--展示父组件通过插槽传递的{{message}}-->
+    </p>
+  </div>
+</template>
+```
+
+```js
+// 父组件代码
+<template>
+  <Child>
+    <template v-slot:child>
+      {{ message }}  <!--插槽要展示的内容-->
+    </template>
+  </Child>
+</template>
+```
+
+:: right ::
+
+> [$refs/$parent/$children/$root]
+
+<br />
+
+- $refs 获 ref 绑定的组件
+- $parent 获取父组件
+- $children 获取子组件
+- $root 获取根组件
+
+```js
+// $refs
+this.$refs.[ref名] // 获取 ref 绑定的组件
+
+// $parent
+this.$parent // 获取父组件
+
+// $children
+this.$children // 获取子组件
+
+// $root
+this.$root // 获取根组件
+```
+
+---
+layout: two-cols
+---
+
+> [$attrs/$listener]
+
+<br />
+
+- \$attrs 接收父作用域中不作为 prop 被识别的 attribute 属性，并且可以通过v-bind="$attrs"传入内部组件
+- \$listener 包含了父作用域中的 v-on 事件监听器。它可以通过 v-on="$listeners" 传入内部组件
+
+```js
+// 孙组件
+<input name="compC" type="text" v-model="message" v-on="$listeners" /> <!--将父组件 keyup 的监听回调绑在该 input 上-->
+
+// 子组件
+<input name="compB" type="text" v-model="message" v-on="$listeners" />  <!--将父组件 keyup 的监听回调绑在该 input 上-->
+<CompC v-bind="$attrs" v-on="$listeners" /> <!--将父组件 keyup 的监听回调继续传递给孙组件，将父组件传递的 attrs 继续传递给孙组件-->
+
+// 父组件
+<CompB :messageFromA="message" @keyup="receive" />  <!--监听子孙组件的 keyup 事件，将 message 传递给子孙组件-->
+```
+
+:: right ::
+
+> provide/inject
+
+<br />
+
+- provide 是一个对象，或者是一个返回对象的函数。该对象包含可注入其子孙的 property ，即要传递给子孙的属性和属性值
+- inject 一个字符串数组，或者是一个对象。当其为字符串数组时，接收 provide 中的属性。当其为对象时，可以通过配置 default 和 from 等属性来设置默认值，在子组件中使用新的命名属性
+
+```js
+// 父组件
+provide() {
+  return {
+    messageFromA: this.message  // 将 message 通过 provide 传递给子孙组件
+  }
+}
+
+// 子组件
+inject: ['messageFromA'], // 通过 inject 接受父组件中 provide 传递过来的 message
+```
+
+> provide 和 inject 默认不是响应式的，可以传入一个可监听的对象
+
+---
+layout: two-cols
+---
+
+> eventBus
+
+<br />
+
+- eventBus 又称事件总线，通过注册一个新的 Vue 实例，通过调用这个实例的 $emit 和 $on 等来监听和触发这个实例的事件，通过传入参数从而实现组件的全局通信
+
+```js
+// 方法一
+// 抽离成一个单独的 js 文件 Bus.js ，然后在需要的地方引入
+// Bus.js
+import Vue from "vue"
+export default new Vue()
+
+// 方法二 直接挂载到全局
+// main.js
+import Vue from "vue"
+Vue.prototype.$bus = new Vue()
+
+// 示例
+this.$bus.$on('event', (data) => {}) // 通过 eventBus 监听 event 事件
+
+this.$bus.$emit('event', { message: 'hello' }) // 通过 eventBus 触发 event 事件
+```
+
+:: right ::
+
+> [Vuex](https://v3.vuex.vuejs.org/zh/)
+
+<br />
+
+- Vuex 是一个状态管理器，用于管理应用的状态
+
+```js
+// store.js
+import Vue from 'vue'
+import Vuex from 'vuex'
+export default new Vuex.Store({
+  state: {
+    message: ''
+  },
+  mutations: {
+    setMessage (state, message) {
+      state.message = message
+    }
+  }
+})
+
+// 组件
+this.$store.state.message // 获取状态
+
+this.$store.commit('setMessage', message) // 修改状态
+```
+
+---
+layout: two-cols
+---
+
+# Vue
+
+#### 组件通信
+
+<br />
+
+<img src="/message.awebp" style="height: 380px" />
+
+:: right ::
+
+#### 插槽
+
+<br />
+
+> Vue 实现了一套内容分发的 API，这套 API 的设计灵感源自 [Web Components 规范草案](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/Slots-Proposal.md)，将 **\<slot>** 元素作为承载分发内容的出口
+
+<br />
+
+- 默认插槽
+
+```js
+// 子组件
+<template>
+  <div>
+    <slot>我是默认插槽，没给我传内容就会默认显示这句话</slot>
+  </div>
+</template>
+
+// 父组件
+<template>
+  <div>
+    <Child>
+      <p>hello</p>
+    </Child>
+  </div>
+</template>
+```
+
+---
+layout: two-cols
+---
+
+# Vue
+
+#### 具名插槽
+
+- 具名插槽允许我们在组件中定义多个插槽
+
+```js
+// 子组件
+<template>
+  <div>
+    <slot name="header"></slot>
+    <slot name="footer"></slot>
+  </div>
+</template>
+
+// 父组件
+<template>
+  <Child>
+    <template v-slot:header>
+      <h2>我是头部内容!</h2>
+    </template>
+    <template v-slot:footer>
+      <h2>我是底部内容!</h2>
+    </template>
+  </Child>
+</template>
+```
+
+:: right ::
+
+#### 作用域插槽
+
+- 作用域插槽是一种特殊的插槽，它允许我们在插槽内部访问组件实例的数据，允许父组件将数据传递到子组件中，并在子组件中使用
+
+```js
+// 子组件
+<template>
+  <div>
+    <slot :message="message"></slot>
+  </div>
+</template>
+data() {
+  return {
+    message: 'hello'
+  }
+}
+
+// 父组件
+<template>
+  <Child>
+    <template v-slot="{ message }">
+      <p>{{ message }}</p>
+    </template>
+  </Child>
+</template>
+```
+
+---
+
+# Vue
+
+#### 事件处理
+
+<br />
+
+> 可以用 v-on 指令监听 DOM 事件，简写为 @
+
+<br />
+
+```js
+// 写法一 直接执行js代码
+<button v-on:click="counter += 1">Add 1</button>
+<button @click="counter += 1">Add 1</button>
+
+// 写法二 调用方法
+<button @click="add(1)">Add 1</button>
+methods: {
+  add(num) {
+    this.counter += num
+  }
+}
+
+// $event 接收事件参数
+<Child @click="add($event, 1)">Add 1</Child>
+```
+
+---
+
+# Vue
+
+#### 事件修饰符
+
+<br />
+
+- .stop 阻止事件冒泡
+- .prevent 阻止默认行为
+- .capture 事件捕获
+- .self 仅触发自身
+- .once 仅触发一次
+- .passive 不阻止默认行为
+
+<br />
+
+#### 自定义事件
+
+```js
+// 子组件
+this.$emit('message')
+
+// 父组件
+<Child @message="message"></Child>
+```
+
+
