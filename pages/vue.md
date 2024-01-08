@@ -486,7 +486,7 @@ layout: two-cols
 
 <br />
 
-<img src="/message.awebp" style="height: 380px" />
+<img src="/message.png" style="height: 380px" />
 
 :: right ::
 
