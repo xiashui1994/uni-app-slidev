@@ -22,7 +22,7 @@
 
 - 基本数据类型
 
-> null，undefined，boolean，number，string，symbol，bigint
+> null，undefined，boolean，number，string，[symbol](https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-symbol.md)，[bigint](https://www.bookstack.cn/read/es6-3rd/spilt.9.docs-number.md)
 
 <br />
 
@@ -123,7 +123,7 @@
 | --- | --- |
 | push / pop | 末尾推入和弹出，改变原数组， 返回推入/弹出项 |
 | unshift / shift | 头部推入和弹出，改变原数组，返回操作项 |
-| sort(fn) / reverse | 排序与反转，改变原数组 |
+| sort / reverse | 排序与反转，改变原数组 |
 | concat | 连接数组，不影响原数组， 浅拷贝 |
 | slice | 返回截断后的新数组，不改变原数组 |
 | splice | 返回删除元素组成的数组，value为插入项，改变原数组 |
@@ -139,7 +139,7 @@
 | 方法 | 说明 |
 | --- | --- |
 | indexOf / lastIndexOf | 查找数组项，返回对应的下标 |
-| reduce(fn(prev, cur)， defaultPrev) | 两两执行，prev 为上次化简函数的return值，cur为当前值(从第二项开始) |
+| reduce(fn(prev, cur)， defaultPrev) | 对数组中的每个元素执行一个指定的回调函数，将数组元素进行累积计算，最终返回一个值。 |
 | includes | 返回一个布尔值，表示某个数组是否包含给定的值 |
 | find | 返回第一个符合条件的项 |
 | findIndex | 返回第一个符合条件的项的下标 |
@@ -217,7 +217,7 @@ function () { }
 
 | 分类 | 说明 |
 | --- | --- |
-| import / export | es6 |
+| [import](https://www.bookstack.cn/read/es6-3rd/spilt.4.docs-module.md) / [export](https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-module.md) | es6 |
 | require / module.exports / exports | commonjs |
 | require / defined | amd |
 
@@ -249,7 +249,7 @@ function () { }
 <br />
 
 - 宏任务： script( 整体代码)、setTimeout、setInterval、I/O、UI 交互事件
-- 微任务： Promise.then()、async/await，MutaionObserver
+- 微任务： Promise.then()、async/await，[MutaionObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)
 
 ---
 
@@ -283,7 +283,7 @@ function () { }
 
 # JavaScript
 
-#### Promise
+#### [Promise](https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-promise.md)
 
 <br />
 
@@ -345,7 +345,7 @@ function () { }
 
 # JavaScript
 
-#### Generator
+#### [Generator](https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-generator.md)
 
 <br />
 
@@ -408,7 +408,7 @@ function*fetch() { }
 
 # JavaScript
 
-#### Async / Await
+#### [Async / Await](https://www.bookstack.cn/read/es6-3rd/spilt.1.docs-async.md)
 
 <br />
 
@@ -460,7 +460,7 @@ fn().then(res => {
 
 <br />
 
-> Javascript中有三种作用域：**全局作用域**、**函数作用域**、**块作用域**（ES6 引入了 let 和 const 关键字，在大括号中使用 let 和 const 声明的变量存在于块级作用域中。在大括号之外不能访问这些变量）
+> Javascript中有三种作用域：**全局作用域**、**函数作用域**、**[块作用域](https://www.bookstack.cn/read/es6-3rd/spilt.2.docs-let.md)**（ES6 引入了 let 和 const 关键字，在大括号中使用 let 和 const 声明的变量存在于块级作用域中。在大括号之外不能访问这些变量）
 
 ```js
 var a = 1; // 全局作用域
@@ -640,3 +640,28 @@ box.removeEventListener('click', fn, false); // 移除
 | location对象 | reload()、href、search |
 | history对象 | back()、forward()、go() |
 | navigator对象 | userAgent、platform |
+
+---
+
+# JavaScript
+
+#### 练习
+
+<br />
+
+- [使用 reduce 将下面的数据根据 type 分组](https://code.juejin.cn/pen/7321564820539932682)
+
+```js
+[{ name: '苹果', type: '水果'}, { name: '香蕉', type: '水果'}, { name: '橘子', type: '水果'},
+{ name: '鸡蛋', type: '蔬菜'}, { name: '土豆', type: '蔬菜'}, { name: '黄瓜', type: '蔬菜'},
+{ name: '猪肉', type: '肉类'}, { name: '牛肉', type: '肉类'}, { name: '鸡肉', type: '肉类'}]
+
+// 示例结果
+{
+  "水果": [ '苹果', '香蕉', '橘子'],
+  "蔬菜": [ '鸡蛋', '土豆', '黄瓜'],
+  "肉类": [ '猪肉', '牛肉', '鸡肉'],
+}
+```
+
+- [求斐波那契数列的第n值（提示：递归）](https://code.juejin.cn/pen/7321565558511435776)
