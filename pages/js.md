@@ -488,7 +488,7 @@ x();
 <div class="flex items-center justify-between">
   <div style="width: 350px">
     <p>1.原型（prototype）: 一个简单的对象，用于实现对象的属性继承。可以简单的理解成对象的爹。在 Firefox 和 Chrome 中，每个JavaScript对象中都包含一个 __proto__(非标准) 的属性指向它爹(该对象的原型)，可 obj__proto__  进行访问</p>
-    <p>2.构造函数: 可以通过 new 来 新建一个对象 的函数</p>
+    <p>2.构造函数: 可以通过 new 来新建一个对象的函数（任何一个函数，如果在前面加了new，那就是构造函数）</p>
     <p>3.实例: 通过构造函数和 new 创建出来的对象，便是实例。 实例通过 __proto__ 指向原型，通过 constructor 指向构造函数</p>
   </div>
   <img style="width: 500px" src="/constructor.png">
@@ -505,6 +505,23 @@ x();
 > JavaScript 对象通过 **\_\_proto\_\_** 指向父类对象，直到指向 Object 对象为止，这样就形成了一个原型指向的链条，即原型链
 
 <img style="margin-left: -80px" src="/proto.png" />
+
+---
+
+# JavaScript
+
+#### this 指向
+
+<br />
+
+| 调用方式 | 非严格模式 |	备注 |
+| --- | --- |	--- |
+| 全局作用域 | window |
+| 普通函数调用 | window |	严格模式下是 undefined |
+| 构造函数调用 | 实例对象 |	原型方法中 this 也是实例对象 |
+| 对象方法调用 | 该方法所属对象 |	紧挨着的对象 |
+| 事件绑定方法 | 绑定事件对象	|
+| 箭头函数 | 继承自外部作用域，不改变 this 指向 |
 
 ---
 

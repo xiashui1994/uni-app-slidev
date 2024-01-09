@@ -119,10 +119,61 @@ obj.a = 2 // set
 </div>
 
 ---
+layout: two-cols
+---
 
 # Vue
 
-#### 虚拟DOM (Virtaul DOM)
+#### 模板编译
+
+<br />
+
+> Vue 的编译过程就是将 template 转化为 render 函数的过程
+
+- 解析生成 AST树：将 template 模板转化成 AST语法树，使用大量的正则表达式对模板进行解析，遇到标签、文本的时候都会执行对应的钩子进行相关处理
+
+- 标记优化：对静态语法做静态标记，静态节点跳过 diff 操作
+
+- 代码生成：将优化后的 AST树转换为可执行的代码
+
+> 相关概念：[render 函数](https://juejin.cn/post/6844903973502058504)、[AST抽象语法树](https://juejin.cn/post/7155151377013047304)、[diff 算法](https://juejin.cn/post/6844903607913938951)
+
+:: right ::
+
+```js
+<div id="app"></div>
+let vm = new Vue({
+  el: '#app',
+  template: `<div>
+    // <span>hello world</span> 是静态节点
+    <span>hello world</span>    
+    // <p>{{name}}</p> 是动态节点
+    <p>{{name}}</p>
+  </div>`,
+  data() { return { name: 'test' } }
+});
+
+// 把 html 字符串变成 render 函数
+export function compileToFunctions(template) {
+  // 1.把 html 代码转成 ast语法树 ast 用来描述代码本身形成树结构不仅可以描述 html 也能描述 css 以及 js 语法
+  let ast = parse(template); // template 转 ast语法树
+  // 2.优化静态节点：对 ast树进行标记，标记静态节点
+  if (options.optimize !== false) { optimize(ast, options); }
+  // 3.通过 ast 重新生成代码
+  // 类似 _c('div',{id:"app"},_c('div',undefined,_v("hello"+_s(name)),_c('span',undefined,_v("world"))))
+  // _c代表创建元素 _v代表创建文本 _s代表 Json.stringify --把对象解析成文本
+  let code = generate(ast);
+  // 使用 with 语法改变作用域为 this 之后调用 render 函数可以使用 call 改变 this 方便 code 里面的变量取值
+  let renderFn = new Function(`with(this){return ${code}}`);
+  return renderFn;
+}
+```
+
+---
+
+# Vue
+
+#### [虚拟DOM (Virtaul DOM)](https://github.com/snabbdom/snabbdom)
 
 <br />
 
@@ -635,4 +686,388 @@ this.$emit('message')
 <Child @message="message"></Child>
 ```
 
+---
 
+# Vue
+
+#### mixin（混入）
+
+<br />
+
+> 复用组件功能
+
+```js
+// mixin.js
+export default { ... } // 和组件选项相同
+
+// 全局混入
+import Vue from 'vue'
+import mixin from './mixin.js'
+Vue.mixin(mixin)
+
+// 组件混入
+import mixin from './mixin.js'
+export default {
+  mixins: [mixin]
+}
+
+// 选项合并
+1.数据对象在内部会进行递归合并，并在发生冲突时以组件数据优先
+2.同名钩子函数将合并为一个数组，混入对象的钩子将在组件自身钩子之前调用
+3.值为对象的选项，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对
+```
+
+---
+
+# Vue
+
+#### 自定义指令
+
+```js
+// 全局注册
+import Vue from 'vue'
+Vue.directive('focus', { // v-focus
+  bind: function (el, binding, vnode) {},
+  inserted: function (el, binding, vnode) {},
+  update: function (el, binding, vnode) {}
+})
+// el: 绑定的元素
+// binding: {
+//   name: 指令名，不包括 v- 前缀
+//   value: 指令的绑定值
+//   oldValue: 指令绑定的前一个值
+//   expression: 指令表达式
+//   arg: 传给指令的参数
+//   modifiers: 修饰符
+// }
+// vnode: Vue 编译生成的虚拟节点
+
+// 局部注册
+directives: {
+  focus: { ... }
+}
+```
+
+---
+
+# Vue
+
+#### 插件
+
+<br />
+
+> 插件通常用来为 Vue 添加全局功能
+
+```js
+// 开发插件 plugin.js
+// Vue.js 的插件应该暴露一个 install 方法。这个方法的第一个参数是 Vue 构造器，第二个参数是一个可选的选项对象
+export default {
+  install: function (Vue, options) {
+    Vue.myGlobalMethod = function () {} // 添加全局方法
+    Vue.directive('my-directive', {}) // 添加全局资源
+    Vue.mixin({}) // 注入组件选项
+    Vue.prototype.$message = function () {} // 添加实例方法
+  }
+}
+
+// 使用插件
+// 通过全局方法 Vue.use() 使用插件。它需要在你调用 new Vue() 启动应用之前完成
+import Vue from 'vue'
+import plugin from './plugin.js'
+Vue.use(plugin, options) // options 为可选的选项对象
+```
+
+---
+
+# Vue
+
+#### [vue-router](https://v3.router.vuejs.org/zh/)
+
+<br />
+
+> Vue.js 官方的路由管理器
+
+<br />
+
+- 注入
+
+```js
+// router 文件夹 index.js
+import VueRouter from 'vue-router'
+const router = new VueRouter({ routes }) // 创建 router 实例
+
+// main.js 挂载 router
+import Vue from 'vue'
+import router from './router'
+const app = new Vue({
+  router
+}).$mount('#app')
+```
+
+- 访问
+
+```js
+this.$router // 访问路由器
+this.$route // 访问当前路由
+```
+
+---
+
+# Vue
+
+#### vue-router
+
+<br />
+
+- 模式：hash、history
+
+```js
+// 默认 hash，url 中包含 #
+// history，url 中不包含 #
+const router = new VueRouter({ mode: 'history', routes })
+```
+
+- 跳转
+
+```js
+// 声明式（标签跳转）
+<router-link to=""></router-link>
+<router-link to="" replace></router-link>
+
+// 编程式（js跳转）
+this.$router.push('/') // 向 history 栈添加一个新的记录
+this.$router.replace('/') // 替换当前的 history 记录
+this.$router.go(n) // 前进或后退 n 步
+```
+
+- router-view
+
+```js
+<router-view></router-view> // 渲染路径匹配到的视图组件
+```
+
+---
+
+# Vue
+
+#### vue-router
+
+- 传参
+
+```js
+// query 参数 会在 url 后面拼接，变成 /register?plan=private
+this.$router.push({ path: 'register', query: { plan: 'private' }}) // 传参
+this.$route.query // 接收参数
+// params 参数
+this.$router.push({ name: 'register', params: { plan: 'private' }}) // 传参
+this.$route.params // 接收参数
+```
+
+- routes
+
+```js
+routes: Array<RouteConfig>
+interface RouteConfig = {
+  path: string, // 路由路径
+  component?: Component, // 组件
+  name?: string, // 命名路由
+  redirect?: string | Location | Function, // 重定向
+  props?: boolean | Object | Function, // 路由参数
+  alias?: string | Array<string>, // 别名
+  children?: Array<RouteConfig>, // 嵌套路由
+  meta?: any // 路由元信息 自定义路由配置
+}
+```
+
+---
+
+# Vue
+
+#### vue-router
+
+- 导航守卫
+
+```js
+// 全局守卫
+// to: Route: 即将要进入的目标路由对象
+// from: Route: 当前导航正要离开的路由
+// next: Function: 一定要调用该方法来 resolve 这个钩子
+// next() 进行管道中的下一个钩子 next(false) 中断当前的导航 next('/') 跳转到一个不同的地址
+router.beforeEach((to, from, next) => { ... }) // 全局前置守卫
+
+router.beforeResolve((to, from, next) => { ... }) // 全局解析守卫
+
+router.afterEach((to, from) => { ... }) // 全局后置钩子
+
+// 组件内的守卫（路由组件内，记录在路由表的组件）
+beforeRouteEnter((to, from, next) => { ... }) // 在渲染该组件的对应路由被确认前调用
+
+beforeRouteUpdate((to, from, next) => { ... }) // 在当前路由改变，但是该组件被复用时调用
+
+beforeRouteLeave((to, from, next) => { ... }) // 导航离开该组件的对应路由时调用
+```
+
+---
+layout: two-cols
+---
+
+# Vue
+
+#### [Vuex](https://v3.vuex.vuejs.org/zh/)
+
+<br />
+
+> Vuex 是一个专为 Vue.js 应用程序开发的**状态管理**模式。vuex 更多地用于解决跨组件通信以及作为数据中心集中式存储数据
+
+<br />
+
+- 状态管理模式？
+
+```js
+new Vue({
+  data () { // state 驱动应用的数据源
+    return {
+      count: 0
+    }
+  },
+  template: `
+    <div>{{ count }}</div>
+  `, // view 以声明方式将 state 映射到视图
+  methods: { // actions 响应在 view 上的用户输入导致的状态变化
+    increment () {
+      this.count++
+    }
+  }
+})
+```
+
+:: right ::
+
+<img src="/flow.png" />
+
+<p style="font-size: 14px">我们期待以一种简单的“单向数据流”的方式管理应用，即状态 -> 视图 -> 操作单向循环的方式。但当我们的应用遇到多个组件共享状态时，单向数据流的简洁性很容易被破坏。因此，我们有必要把组件的共享状态抽取出来，以一个全局单例模式管理。通过定义和隔离状态管理中的各种概念并通过强制规则维持视图和状态间的独立性，我们的代码将会变得更结构化且易维护。</p>
+
+---
+
+# Vue
+
+#### Vuex
+
+<br />
+
+- 注入
+
+```js
+// store 目录 index.js
+import Vue from 'vue';
+import Vuex from 'vuex';
+import modules from './modules';
+
+Vue.use(Vuex);
+export default new Vuex.Store({ modules });
+
+// main.js
+import Vue from 'vue'
+import store from './store'
+
+new Vue({ store })
+```
+
+---
+layout: two-cols
+---
+
+# Vue
+
+#### Vuex
+
+<br />
+
+- 核心概念
+
+| 核心概念 | 描述 |
+| --- | --- |
+| state | 单一数据源，存储应用状态 |
+| getters | 对 state 进行计算操作 |
+| mutations | 修改 state 的唯一途径， 只能是同步操作 |
+| actions | 提交 mutation，可以包含任意异步操作 |
+| modules | 模块 |
+
+:: right ::
+
+<div class="flex justify-center items-center h-100%">
+  <img src="/vuex.png" />
+</div>
+
+---
+
+# Vue
+
+#### Vuex
+
+<br />
+
+- 使用
+
+```js
+// 直接调用 store
+this.$store.state // state
+this.$store.getters // getters
+this.$store.commit('mutation handler', payload) // mutation payload 传入的参数，是一个对象
+this.$store.dispatch('action handler', payload) // action payload 传入的参数，是一个对象
+this.$store.dispatch({ type: 'action handler', ...payload  }) // action 对象形式调用
+
+// 辅助函数
+import { mapActions, mapMutations, mapState, mapGetters } from 'vuex'
+
+computed: {
+  ...mapState({ count: state => state.count }),
+  ...mapGetters(['doneCount'])
+},
+methods: {
+  ...mapMutations(['increment']),
+  ...mapActions(['increment'])
+}
+```
+
+---
+
+# Vue
+
+#### [Vue Loader](https://vue-loader.vuejs.org/zh/)
+
+<br />
+
+> Vue Loader 是一个 webpack 的 loader，它允许你以一种名为单文件组件 (SFCs)的格式撰写 Vue 组件
+
+```js
+<template>
+  <div class="example">{{ msg }}</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      msg: 'Hello world!'
+    }
+  }
+}
+</script>
+
+<style> // lang scoped
+.example {
+  color: red;
+}
+</style>
+```
+
+---
+
+# Vue
+
+#### [Vue Devtools](https://chromewebstore.google.com/detail/nhdogjmejiglipccpnnnanhbledajbpd)
+
+<br />
+
+<img src="/devtools.png" />
