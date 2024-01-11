@@ -687,6 +687,64 @@ this.$emit('message')
 ```
 
 ---
+layout: two-cols
+---
+
+# Vue
+
+#### 计算属性
+
+<br />
+
+> 当页面中有某些数据依赖其他数据进行变动的时候，可以使用计算属性 computed
+
+```js
+computed: {
+  message() {
+    return this.message.split('').reverse()
+  }
+  // 接收参数
+  message() {
+    return (message) => message.split('').reverse()
+  }
+  // get set
+  message: {
+    get() { return this.message }, // get ⽅法是取
+    set(val) { this.message = val } // 在 computed 中定义的变量的值发⽣改变时，会触发 set ⽅法
+  }
+}
+```
+
+> 计算属性是基于它们的响应式依赖进行**缓存**的。只在相关响应式依赖发生改变时它们才会**重新求值**
+
+:: right ::
+
+#### 侦听器
+
+<br />
+
+> 如果要在数据变化的同时进行异步操作或者是比较大的开销，那么 watch 为最佳选择
+
+```js
+watch: {
+  // newVal 新值，oldVal 旧值
+  message(newVal, oldVal) {}
+  // 对象属性监听
+  'obj.message'(newVal, oldVal) {}
+  message: {
+    // 回调函数
+    handler(newVal, oldVal) {},
+    // 深度监听
+    deep: true,
+    // 立即监听
+    immediate: true
+  }
+}
+```
+
+> 无缓存性，页面重新渲染时值不变化也会执行，watch 监听性能开销很大，非必要不使用 watch
+
+---
 
 # Vue
 
