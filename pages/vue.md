@@ -1,14 +1,22 @@
+---
+layout: two-cols
+---
+
 # [Vue](https://v2.cn.vuejs.org/)
 
-#### 介绍
+<br />
+
+<div class="flex justify-center items-center absolute top-50% left-50% transform -translate-x-1/2 -translate-y-1/2">
+  <img style="height: 200px" src="/vue-logo.svg">
+</div>
+
+:: right ::
 
 <br />
 
-> Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的**渐进式框架**
+> Vue (读音类似于 view) 是一套用于构建用户界面的**渐进式框架**
 
 <br />
-
-#### 特色
 
 - 响应式
 - 双向绑定
