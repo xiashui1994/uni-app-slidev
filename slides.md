@@ -44,6 +44,7 @@ image: https://source.unsplash.com/collection/94734566/1920x1080
   <div class="mb-4" @click="$slidev.nav.go(68)">4. 宿主环境</div>
   <div class="mb-4" @click="$slidev.nav.go(72)">5. Vue</div>
   <div class="mb-4" @click="$slidev.nav.go(106)">6. 前端开发框架</div>
+  <div class="mb-4" @click="$slidev.nav.go(110)">7. 微信小程序</div>
 </div>
 
 ---
