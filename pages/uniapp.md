@@ -170,24 +170,137 @@ manifest.json 文件是应用的配置文件，用于指定应用的名称、图
 
 > App.vue
 
-App.vue 是 uni-app 的主组件，类似于微信小程序中的 app.js
+App.vue 是 uni-app 的主组件，类似于微信小程序中的 app.js，不能写 \<template\>
 
 ---
 
-# uni-app 原理
+# uni-app
+
+#### 插件
+
+<br />
+
+> [插件市场](https://ext.dcloud.net.cn/)
+
+uni-app 插件市场，是 uni-app 官方插件生态集中地。不过开发者水平参差不齐，要仔细甄别，还要考虑插件的兼容平台
+
+> [uni_modules](https://uniapp.dcloud.net.cn/plugin/uni_modules.html)
+
+uni_modules 是 uni-app 的插件模块化规范，通常是对一组 js sdk、组件、页面、uniCloud云函数、公共模块等的封装，用于嵌入到 uni-app 项目中使用，也支持直接封装为项目模板
+
+> [easycom](https://uniapp.dcloud.net.cn/component/#easycom)
+
+easycom 可以不用引用、注册组件，直接在页面中使用，只要组件安装在项目的 components 目录下或 uni_modules 目录下，并符合 **components/组件名称/组件名称.vue** 目录结构。如果你的组件名称或路径不符合 easycom 的默认规范，可以在 **pages.json** 的 easycom 节点进行个性化设置，自定义匹配组件的策略
 
 ---
 
-# uni-app 组件
+# uni-app
+
+#### [uView UI](https://uviewui.com/)
+
+<br />
+
+> uView UI，是全面兼容 uni-app 生态的框架，全面的组件和便捷的工具会让您信手拈来，如鱼得水
+
+- 组件：覆盖开发过程的各个需求，功能丰富，多端兼容
+
+- API：内置常用工具函数，能够满足大部分需求，挂载在 **uni.$u** 对象上
+
+#### [uCharts](https://www.ucharts.cn/v2/#/)
+
+<br />
+
+> uCharts 是一款基于 canvas API 开发的适用于所有前端应用的图表库
+
+- [原生方式](https://www.ucharts.cn/v2/#/doc/index)
+
+- [组件方式](https://www.ucharts.cn/v2/#/tool/index)（项目使用方式）
 
 ---
-
-# uni-app API
-
+layout: two-cols
 ---
 
-# uni-app 插件市场
+# uni-app
+
+#### 框架
+
+<br />
+
+```bash
+├─.editorconfig                 // 编辑器配置
+├─.eslintignore                 // eslint忽略文件
+├─.eslintrc.js                  // eslint配置
+├─.gitignore                    // git忽略文件
+├─README.md                     // 说明文档
+├─babel.config.js               // babel配置
+├─package-lock.json             // npm版本控制
+├─package.json                  // 包管理
+├─postcss.config.js             // postcss配置
+├─tsconfig.json                 // ts配置        
+├─vue.config.js                 // vue配置
+├─src                           // 资源目录
+├─public                        // 模板目录
+|   └index.html                 // h5模板
+```
+
+> uni-app 开发框架基于 vue-cli 创建
+
+:: right ::
+
+<br />
+
+```bash
+├─src                           // 资源目录
+|  ├─App.vue                    // 页面入口文件
+|  ├─main.js                    // 项目入口文件
+|  ├─manifest.json              // 应用配置文件
+|  ├─pages.json                 // 全局页面配置
+|  ├─uni.scss                   // 预置scss变量
+|  ├─utils                      // 工具库
+|  |   └util.js                 // 函数工具库
+|  ├─static                     // 静态资源
+|  ├─plugins                    // 拓展插件
+|  |    ├─luch-request          // 跨平台请求插件
+|  |    |      └config.js       // 插件配置
+|  ├─pages                      // 页面目录
+|  |   ├─index                  // 首页示例
+|  |   |   └index.vue
+|  ├─feConfig                   // 环境配置
+|  |    ├─development.js        // 开发环境
+|  |    ├─production.js         // 生产环境
+|  |    └test.js                // 测试环境
+|  ├─constants                  // 常量
+|  |    └enum.js                // 枚举文件
+```
 
 ---
+layout: two-cols
+---
 
-# uni_modules
+# uni-app
+
+#### 运行、发布
+
+- 开发：`npm run dev:%PLATFORM%`
+
+- 测试：`npm run test:%PLATFORM%`
+
+- 正式：`npm run build:%PLATFORM%`
+
+- 发布：打包后的产物在 `dist/build/%PLATFORM%` 目录
+
+<br />
+
+> %PLATFORM%: h5、mp-weixin 等
+
+:: right ::
+
+<div class="flex items-center justify-center h-full">
+  <img src="/build.png" />
+</div>
+
+---
+layout: end
+---
+
+Thank you
